@@ -1,19 +1,23 @@
 from datetime import datetime
 import sqlite3 
+from zoneinfo import ZoneInfo
 
-curtime = datetime.now().isoformat()
-con = sqlite3.connect('events.db')
-cur = con.cursor()
+def check_alerts():
+    localtime = datetime.now(ZoneInfo("America/New_York"))
+    curtime = localtime.isoformat()
+    con = sqlite3.connect('events.db')
+    cur = con.cursor()
 
-cur.execute("""
-            SELECT title
-            FROM events
-            WHERE start_time <= ?
-            AND end_time >- ? """, (curtime, curtime))
+    cur.execute("""
+                SELECT title
+                FROM events
+                WHERE start_time <= ?
+                AND end_time >= ? """, (curtime, curtime))
 
-event = cur.fetchall()
-print(event)
+    rows = cur.fetchall()
+    for i in rows:
+        for q in i:
+            print(q)
+    #cur.execute("DELETE FROM events WHERE end_time <= ?", (curtime,))
 
-cur.execute("DELETE FROM events WHERE end_time <= ?", (curtime,))
-
-con.commit()
+    con.commit()
