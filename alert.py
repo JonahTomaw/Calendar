@@ -14,10 +14,11 @@ def check_alerts():
                 WHERE start_time <= ?
                 AND end_time >= ? """, (curtime, curtime))
 
+    print('on going')
     rows = cur.fetchall()
     for i in rows:
         for q in i:
             print(q)
-    #cur.execute("DELETE FROM events WHERE end_time <= ?", (curtime,))
+    cur.execute("DELETE FROM events WHERE end_time <= ?", (curtime,))
 
     con.commit()
