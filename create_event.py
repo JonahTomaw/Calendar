@@ -1,25 +1,28 @@
 import sqlite3
-from datetime import datetime  
+from datetime import datetime, timedelta
 import time
 
 def event_create():
-    plan = input("do you want to create a new event yes or no:")
+    plan = input("do you want to create a new event yes or no: ")
     if plan.lower() == "yes":
         con = sqlite3.connect('events.db')
         cur = con.cursor()
 
         title = input("Title:")
 
-        start = input("what time do you want it to start? Format in 'MM/DD/YY/HH/MM:")
+        start = input("what time do you want it to start? Format in 'MM/DD/YY/HH/MM: ")
         dt1 = datetime.strptime(start, "%m/%d/%y/%H/%M")
 
-        end = input("Do you want an end time? Format in 'MM/DD/YY/HH/MM.:")
+        time_before = input("how minutes in advance would you like to be notified MM: ")
+        first_alert =  dt1 - timedelta(minutes=int(time_before))
+
+        end = input("Do you want an end time? Format in 'MM/DD/YY/HH/MM: ")
         dt2 = datetime.strptime(end, "%m/%d/%y/%H/%M")
 
         cur.execute("""INSERT INTO events 
-            (start_time, end_time, title)
-            VALUES (?, ?, ?);
-            """, (dt1.isoformat(), dt2.isoformat(), title))
+            (start_time, end_time, title, prealert)
+            VALUES (?, ?, ?, ?);
+            """, (dt1.isoformat(), dt2.isoformat(), title, first_alert.isoformat()))
         
         con.commit()
         con.close()
