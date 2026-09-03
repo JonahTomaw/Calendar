@@ -16,9 +16,8 @@ def check_alerts():
 
     print('on going')
     rows = cur.fetchall()
-    for i in rows:
-        for q in i:
-            print(q)
-    cur.execute("DELETE FROM events WHERE end_time <= ?", (curtime,))
 
-    con.commit()
+    con.close()
+
+    return rows
+
