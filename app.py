@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request
-from alert import check_alerts
+from alert import check_alerts, delete_old_events
 from create_event import event_create
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-
+    delete_old_events()
     events = check_alerts()
 
     return render_template("index.html", events=events)
@@ -22,7 +22,9 @@ def create():
 
     event_create(title, start, end, time_before)
 
-    return "Event Received"
+    events = check_alerts()
+
+    return render_template("index.html", events=events)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

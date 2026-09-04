@@ -6,10 +6,13 @@ def event_create(title, start, end, time_before):
     con = sqlite3.connect('events.db')
     cur = con.cursor()
 
-    dt1 = datetime.strptime(start, "%m/%d/%y/%H/%M")
-    dt2 = datetime.strptime(end, "%m/%d/%y/%H/%M")
+    dt1 = datetime.strptime(start, "%Y-%m-%dT%H:%M")
+    dt2 = datetime.strptime(end, "%Y-%m-%dT%H:%M")
 
-    first_alert = dt1 - timedelta(minutes=int(time_before))
+    if time_before:
+        first_alert = dt1 - timedelta(minutes=int(time_before))
+    else:
+        first_alert = None
         
     cur.execute("""
         INSERT INTO events 
@@ -19,7 +22,7 @@ def event_create(title, start, end, time_before):
         dt1.isoformat(),
         dt2.isoformat(),
         title,
-        first_alert.isoformat()
+        first_alert.isoformat() if first_alert else None
         ))
         
     con.commit()

@@ -16,8 +16,22 @@ def check_alerts():
 
     print('on going')
     rows = cur.fetchall()
-
     con.close()
 
     return rows
 
+def delete_old_events():
+    
+    localtime = datetime.now(ZoneInfo("America/New_York"))
+    curtime = localtime.isoformat()
+
+    con = sqlite3.connect('events.db')
+    cur = con.cursor()
+
+    cur.execute("""
+    DELETE FROM events
+    WHERE end_time < ?""",
+    (curtime,))
+
+    con.commit()
+    con.close()
