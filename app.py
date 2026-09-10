@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from alert import check_alerts, delete_old_events
+from alert import check_alerts, delete_old_events, check_prealerts
 from create_event import event_create
 
 app = Flask(__name__)
@@ -25,6 +25,11 @@ def create():
     events = check_alerts()
 
     return render_template("index.html", events=events)
+
+@app.route("/alerts")
+def alerts():
+    alerts = check_prealerts()
+    return {"alerts": alerts}
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

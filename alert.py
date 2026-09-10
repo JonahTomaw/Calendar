@@ -14,7 +14,23 @@ def check_alerts():
                 WHERE start_time <= ?
                 AND end_time >= ? """, (curtime, curtime))
 
-    print('on going')
+    rows = cur.fetchall()
+    con.close()
+
+    return rows
+
+def check_prealerts():
+    localtime = datetime.now(ZoneInfo("America/New_York"))
+    curtime = localtime.isoformat()
+    con = sqlite3.connect('events.db')
+    cur = con.cursor()
+    
+    cur.execute("""
+                SELECT title
+                FROM events
+                WHERE prealert <= ?
+                 AND start_time >= ? """, (curtime, curtime))
+    
     rows = cur.fetchall()
     con.close()
 
