@@ -52,6 +52,9 @@ function checkAlerts() {
                         const notification = new Notification("Calendar Alert", {
                         body: data.alerts[0][0]
                         }); 
+
+                        const sound = new Audio("/static/36505577-short-modern-logo-242225.mp3");
+                        sound.play()
                     }
                 });
             }

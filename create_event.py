@@ -22,7 +22,7 @@ def event_create(title, start, end, time_before):
         dt1.isoformat(),
         dt2.isoformat(),
         title,
-        first_alert.isoformat() if first_alert else None
+        first_alert.strftime("%Y-%m-%dT%H:%M") if first_alert else None
         ))
         
     con.commit()

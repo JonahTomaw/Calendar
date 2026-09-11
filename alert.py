@@ -21,20 +21,29 @@ def check_alerts():
 
 def check_prealerts():
     localtime = datetime.now(ZoneInfo("America/New_York"))
-    curtime = localtime.isoformat()
+    curtime = localtime.strftime("%Y-%m-%dT%H:%M")
+
+    print("Curent time:", curtime)
+
     con = sqlite3.connect('events.db')
     cur = con.cursor()
+
+    cur.execute("SELECT title, prealert FROM events")
+
+    rows = cur.fetchall()
+    print("Database:", rows)
     
     cur.execute("""
                 SELECT title
                 FROM events
-                WHERE prealert <= ?
-                 AND start_time >= ? """, (curtime, curtime))
+                WHERE prealert = ?""", (curtime,))
     
-    rows = cur.fetchall()
+    matches = cur.fetchall()
+    print("Matches:", matches)
+
     con.close()
 
-    return rows
+    return matches
 
 def delete_old_events():
     
